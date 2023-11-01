@@ -1,0 +1,75 @@
+pipeline {
+    agent any
+    environment {
+        name="reeya"
+    }
+    parameters {
+        string(name: 'person', defaultValue: 'reeya m', description: 'who are you?')
+        booleanParam(name: 'isMale', defaultValue: false, description: 'Specify if the person is male or not')
+    }
+
+
+    stages {
+        stage('test') {
+            steps {
+                echo 'test'
+                sh 'echo ${person}'
+                sh 'echo ${isMale}'
+                sh '''
+                pwd
+                ls
+                date
+                '''
+                
+            }
+        }
+        
+        stage('continue') {
+            input {
+                message "should we continue"
+                ok "yes we should"
+            }
+            steps {
+                echo 'continue'
+            
+            }
+        }
+        
+        
+        
+        stage('build') {
+            steps {
+                echo 'build'
+                sh 'echo ${name}'
+            }
+        }
+        stage('deploy on test') {
+            environment {
+               user_name="reeya"
+             }
+            steps {
+                echo 'deploy on test'
+                sh 'echo ${name}'
+                sh 'echo ${user_name}'
+            }
+        }
+        stage('deploy on prod') {
+            steps {
+                echo 'Hello prod'
+                sh 'echo ${user_name}'
+            }
+        }
+    }
+    post { 
+        always { 
+            echo 'I will always say Hello again!'
+        }
+        failure{
+            echo 'failure'
+        } 
+        success{
+            echo 'sucess'
+        }
+    }
+    
+}
